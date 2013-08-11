@@ -1,0 +1,13 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  background: url('../img/tweed.png');
+}
+.wrapper {
+  width: 900px;
+  margin: 0 auto;
+  padding: 10px 30px;
+  background: #fff;
+}

@@ -1,0 +1,13 @@
+.neutrino {
+  width: 100%;
+  height: 250px;
+  position: relative;
+  overflow: hidden;
+}
+.neutrino .slide {
+  width: 100%;
+  height: 250px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
