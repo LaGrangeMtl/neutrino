@@ -1,3 +1,25 @@
+/*The MIT License (MIT)
+
+Copyright (c) 2013 Nicolas Poirier-Barolet
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
 //=====================================
 // Closure so that variables don't get
 // involved with variables in your code
@@ -12,17 +34,27 @@ function Neutrino() {
 		// @params : settings
 		//		Custom settings of the user. May be an empty object.
 		//
+		// @params : context
+		//		If defined, will be the root. This is to be able to have multiple
+		//		neutrino slideshow in your page. Though I do not recommend it, it
+		//		is possible.
+		//
 		// This function initialize the slideshow process. Variables are set up 
 		// here and the Parameters of the whole slideshow also. After the 
 		// setting is done, it starts the timer.
 		//=====================================================================
-		init : function(settings) {
-			this.root = $('.neutrino');
+		init : function(settings, context) {
+			this.root = context || $('.neutrino');
 			this.slides = this.root.find('.slide');
 
 			this._setParams(settings);
 			this.currentIndex = 0;
 			this.direction = 1;
+
+			if(this.params.hasArrows) {
+				this.arrows = this.root.find('.arrow');
+				this._setArrowEvents();
+			}
 
 			this._setTimer();
 		},
@@ -49,9 +81,33 @@ function Neutrino() {
 		},
 
 		//=====================================================================
-		// _initSlides : Private Function
+		// _setArrowEvents : Private Function
+		//
+		// Will set the click events on the arrows.
 		//=====================================================================
-		_initSlides : function(){
+		_setArrowEvents : function() {
+			this.arrows.on('click.neutrino', function(e){
+				clearTimeout(this.timer);
+
+				this.direction = $(e.target).data('direction');
+
+				this._initSlides(e);
+			}.bind(this))
+		},
+
+		//=====================================================================
+		// _initSlides : Private Function
+		//
+		// @params : e
+		//		If not defined, it means no click event was done to get here
+		//		therefore, the direction should be 1, which is equal to right
+		//		to left. Please note that not all of the animations will make
+		//		use of the direction parameter. i.e. Fade in/out
+		//=====================================================================
+		_initSlides : function(e){
+			if(!e)
+				this.direction = 1;
+
 			this.currentSlide = this.slides.eq(this.currentIndex);
 			this.nextIndex = this.currentIndex + this.direction;
 			
@@ -62,13 +118,20 @@ function Neutrino() {
 
 			this.nextSlide = this.slides.eq(this.nextIndex);
 
-			this._animateSlides();
+			this._changeSlide();
 		},
 
 		//=====================================================================
-		// _animateSlides : Private Function
+		// _changeSlide : Private Function
+		//
+		// This is where the slides are changed. For the whole process, the 
+		// arrows and the nav buttons will be disabled. They will be enabled
+		// again after the animations are done. Depending on the transitionType
+		// property of the slideshow, it will call the right animation function
 		//=====================================================================
-		_animateSlides : function(){
+		_changeSlide : function(){
+			this.arrows.off('.neutrino');
+
 			this.slides.hide();
 			this.currentSlide.show();
 
@@ -80,12 +143,16 @@ function Neutrino() {
 				alert('Only the SLIDE effect is working right now.');
 
 			animation.done(function(){
+				this._setArrowEvents();
 				this._setTimer();
 			}.bind(this))
 		},
 
 		//=====================================================================
 		// _slide : Private Function
+		//
+		// Function to be called when the transitionType property is set to
+		// 'slide'. Returns a $.Deferred();
 		//=====================================================================
 		_slide : function(){
 			var firstSlide = $.Deferred();
@@ -127,6 +194,8 @@ function Neutrino() {
 
 		//=====================================================================
 		// _setTimer : Private Function
+		//
+		// Sets the timeout function to call _initSlides after each tick.
 		//=====================================================================
 		_setTimer : function(){
 			this.timer = setTimeout(function(){
