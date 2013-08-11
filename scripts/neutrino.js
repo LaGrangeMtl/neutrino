@@ -14,7 +14,7 @@ function Neutrino() {
 		//
 		// This function initialize the slideshow process. Variables are set up 
 		// here and the Parameters of the whole slideshow also. After the 
-		// setting is done, it starts the slideshow.
+		// setting is done, it starts the timer.
 		//=====================================================================
 		init : function(settings) {
 			this.root = $('.neutrino');
@@ -24,7 +24,7 @@ function Neutrino() {
 			this.currentIndex = 0;
 			this.direction = 1;
 
-			this._initSlides();
+			this._setTimer();
 		},
 
 		//=====================================================================
@@ -41,7 +41,7 @@ function Neutrino() {
 			this.params = {
 				transitionType: settings.transitionType || 'slide',
 				transitionTime: settings.transitionTime || '0.75',
-				slideWidth: settings.slideWidth || this.slides.eq(0).width(),
+				slideWidth: this.slides.eq(0).width(),
 				timer: settings.timer || '3500',
 				hasArrows: settings.hasArrows || false,
 				hasNav: settings.hasNav || true
