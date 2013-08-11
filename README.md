@@ -17,11 +17,10 @@ The goals of Neutrino
  do not require 1 trillion characters length selectors such as "neutrino-base-container-lorem-ipsum-this-is-long-for-nothing"      
 
 #####-  Be usable by people with little to no knowledge in JavaScript : 
-> This means that almost every setting will be changeable through the markup if you wish so. Though it is easier
- and produces less messy markup to do so in JavaScript. Therefore, Neutrino will look for settings defined by
- Javascript. If it does not find any, it will look for markup-defined settings and if there aren't any, it will
- use the default settings. I do not want the markup to become messy, and therefore encourage you to learn a bit
- of JavaScript, to make it easier to learn and make Neutrino work in the most efficient way for your project.
+> This means that every single setting will be changeable through a simple object. Therefore, Neutrino will look for 
+ settings defined by the user. If it does not find any, it will use the default settings. I do not want the markup to 
+ become messy, and therefore encourage you to learn a bit of JavaScript, to make it easier to learn and make Neutrino 
+ work in the most efficient way for your project.
  
 #####-  Be usable with and without jQuery, and also as an AMD module : 
 > To speed up development, I will be starting Neutrino with jQuery, and later on make a version of it that is not
@@ -31,8 +30,11 @@ The goals of Neutrino
 Patch notes
 -----------------------------
 
-#####-  0.01 : 
-> - Started the project, and it feels awesome.
+#####-  0.1.0 : 
+> - First working version. Only working with the slide animation right now.
 
-#####-  0.02 : 
+#####-  0.0.2 : 
 > - Updated README.md
+
+#####-  0.0.1 : 
+> - Started the project, and it feels awesome.
