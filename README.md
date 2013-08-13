@@ -1,5 +1,7 @@
 Neutrino
 ========
+#####-  Neutrino currently requires jQuery 1.8.0+ and TweenMax (GSAP)
+#####-  You must use jQuery < 2.0 if you want to support IE8 and older browsers.
 
 Neutrino is a Slideshow "plugin" that requires, little to no knowledge in JavaScript and minimum markup.
 
@@ -29,6 +31,9 @@ The goals of Neutrino
  
 Patch notes
 -----------------------------
+
+#####-  0.3.1 : 
+> - Updated README.md and reorganised the folders so that the demo is separated from the Neutrino folders
 
 #####-  0.3.0 : 
 > - Navigation is working.
