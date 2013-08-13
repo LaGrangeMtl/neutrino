@@ -25,12 +25,50 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 @arrowWidth: 45px;
 @arrowSidePadding: 10px;
 
+@navHeight: 30px;
+@bgColorNav: #0a0a0a;
+@navItemWidth: 15px;
+@navItemHeight: 15px;
+
 .neutrino {
 	width: 100%;
 	height: @slideHeight;
 
 	position: relative;
 	overflow: hidden;
+
+	nav {
+		width: 100%;
+		position: absolute;
+			bottom: 0;
+
+		z-index: 9999;
+
+		ul {
+			margin: 0 auto;
+			padding: 0 5px;
+			list-style-type: none;
+			height: @navHeight;
+			line-height: @navHeight;
+			background: @bgColorNav;
+
+			li {
+				cursor: pointer;
+				display: inline-block;
+				width: @navItemWidth;
+				height: @navItemHeight;
+				background: url('../img/navBtnsSprite.png') no-repeat center top;
+
+				&.active {
+					background-position: center bottom;
+				}
+
+				&+li {
+					margin-left: 5px;
+				}
+			}
+		}
+	}
 
 	.slide {
 		width: 100%;

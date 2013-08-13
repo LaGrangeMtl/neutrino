@@ -30,7 +30,10 @@ The goals of Neutrino
 Patch notes
 -----------------------------
 
-#####-  0.1.1 : 
+#####-  0.3.0 : 
+> - Navigation is working.
+
+#####-  0.2.0 : 
 > - Arrows on each side are working.
 
 #####-  0.1.0 : 

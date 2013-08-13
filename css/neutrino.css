@@ -25,6 +25,33 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   position: relative;
   overflow: hidden;
 }
+.neutrino nav {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  z-index: 9999;
+}
+.neutrino nav ul {
+  margin: 0 auto;
+  padding: 0 5px;
+  list-style-type: none;
+  height: 30px;
+  line-height: 30px;
+  background: #0a0a0a;
+}
+.neutrino nav ul li {
+  cursor: pointer;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  background: url('../img/navBtnsSprite.png') no-repeat center top;
+}
+.neutrino nav ul li.active {
+  background-position: center bottom;
+}
+.neutrino nav ul li + li {
+  margin-left: 5px;
+}
 .neutrino .slide {
   width: 100%;
   height: 250px;
