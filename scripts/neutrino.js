@@ -50,7 +50,7 @@ function Neutrino() {
 			this.direction = 1;
 
 			if(this.params.hasArrows) {
-				this._setArrowEvents();
+				this._createArrows();
 			}
 
 			if(this.params.hasNav) {
@@ -96,6 +96,22 @@ function Neutrino() {
 
 				this._initSlides(e);
 			}.bind(this))
+		},
+
+		//=====================================================================
+		// _createArrows : Private Function
+		//
+		// Creates the arrows for the slideshow. Uses <div> tags, 
+		// and sets the direction by using the data attribute.
+		//=====================================================================
+		_createArrows : function(){
+			var arrowsMarkup = '<div class="arrow left" data-direction="-1"></div>';
+			arrowsMarkup += '<div class="arrow right" data-direction="1"></div>';
+
+			this.root.append(arrowsMarkup);
+			this.arrows = this.root.find('.arrow');
+
+			this._setArrowEvents();
 		},
 
 		//=====================================================================
