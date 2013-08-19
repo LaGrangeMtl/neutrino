@@ -58,7 +58,16 @@ function Neutrino() {
 				this._updateNav();
 			}
 
-			this._setTimer();
+			// Check with settings.timer and not with this.params.timer
+			// because that if you put 0, it is the same as false, and
+			// therefore, this.params.timer will equal the default value
+			if(settings.timer > 0) {
+				this._setTimer();
+			}
+			else {
+				this.params.timer = false;
+				this._initSlides();
+			}
 		},
 
 		//=====================================================================
@@ -78,7 +87,7 @@ function Neutrino() {
 				slideWidth: this.slides.eq(0).width(),
 				timer: settings.timer || '3500',
 				hasArrows: settings.hasArrows || false,
-				hasNav: settings.hasNav || true
+				hasNav: settings.hasNav || false
 			};
 		},
 
@@ -94,7 +103,9 @@ function Neutrino() {
 
 				this.direction = $(e.target).data('direction');
 
+				this.arrows.off('.neutrino');
 				this._initSlides(e);
+				this._changeSlide();
 			}.bind(this))
 		},
 
@@ -132,7 +143,9 @@ function Neutrino() {
 
 					this.direction = 0;
 
+					this.navButtons.off('.neutrino');
 					this._initSlides(e);
+					this._changeSlide();
 				}
 			}.bind(this))
 		},
@@ -217,7 +230,8 @@ function Neutrino() {
 
 			this.nextSlide = this.slides.eq(this.nextIndex);
 
-			this._changeSlide();
+			this.slides.hide();
+			this.currentSlide.show();
 		},
 
 		//=====================================================================
@@ -229,12 +243,6 @@ function Neutrino() {
 		// property of the slideshow, it will call the right animation function
 		//=====================================================================
 		_changeSlide : function(){
-			this.arrows.off('.neutrino');
-			this.navButtons.off('.neutrino');
-
-			this.slides.hide();
-			this.currentSlide.show();
-
 			var animation;
 
 			if(this.params.transitionType == 'slide')
@@ -251,7 +259,8 @@ function Neutrino() {
 				if(this.params.hasArrows)
 					this._setArrowEvents();
 				
-				this._setTimer();
+				if(this.params.timer)
+					this._setTimer();
 			}.bind(this))
 		},
 
@@ -309,6 +318,7 @@ function Neutrino() {
 		_setTimer : function(){
 			this.timer = setTimeout(function(){
 				this._initSlides();
+				this._changeSlide();
 			}.bind(this), this.params.timer);
 		}
 	}
