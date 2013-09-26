@@ -44,6 +44,8 @@ function Neutrino() {
 			this.slides = this.root.find('.slide');
 			this.arrows = this.root.find('.arrow');
 			this.nav = this.root.find('nav');
+			this.navButtons = undefined;
+			this.timer = undefined;
 
 			this._setParams(settings);
 			this.currentIndex = 0;
@@ -62,6 +64,7 @@ function Neutrino() {
 			// because that if you put 0, it is the same as false, and
 			// therefore, this.params.timer will equal the default value
 			if(settings.timer > 0) {
+				this._initSlides();
 				this._setTimer();
 			}
 			else {
@@ -133,21 +136,21 @@ function Neutrino() {
 		// process wait for another click or the timer to change the slide.
 		//=====================================================================
 		_setNavEvents : function() {
+			var _self = this;
 			this.navButtons.on('click.neutrino', function(e){
 				// If is already active, wait for the timer to change slide
 				if($(e.target).hasClass('active')){
 					return;
 				}
 				else {
-					clearTimeout(this.timer);
+					clearTimeout(_self.timer);
 
-					this.direction = 0;
+					_self.direction = 0;
 
-					this.navButtons.off('.neutrino');
-					this._initSlides(e);
-					this._changeSlide();
+					_self._initSlides(e);
+					_self._changeSlide();
 				}
-			}.bind(this))
+			});
 		},
 
 		//=====================================================================
@@ -245,23 +248,29 @@ function Neutrino() {
 		_changeSlide : function(){
 			var animation;
 
+			if(this.params.hasNav)
+				this.navButtons.off('.neutrino');
+
 			if(this.params.transitionType == 'slide')
 				animation = this._slide();
 			else
 				alert('Only the SLIDE effect is working right now.');
 
+			var _self = this;
 			animation.done(function(){
-				if(this.params.hasNav){
-					this._updateNav();
-					this._setNavEvents();
+				if(_self.params.hasNav){
+					_self._updateNav();
+					_self._setNavEvents();
 				}
 
-				if(this.params.hasArrows)
-					this._setArrowEvents();
+				if(_self.params.hasArrows)
+					_self._setArrowEvents();
 				
-				if(this.params.timer)
-					this._setTimer();
-			}.bind(this))
+				if(_self.params.timer) {
+					_self.direction = 1;
+					_self._setTimer();
+				}
+			})
 		},
 
 		//=====================================================================
@@ -280,32 +289,34 @@ function Neutrino() {
 			this.nextSlide
 				.css({left: (this.params.slideWidth * this.direction)})
 				.show();
-				
+
+			var _self = this;
 			TweenMax.to(this.currentSlide, this.params.transitionTime, {
 				left: "+="+(this.params.slideWidth * (this.direction * -1)),
 				
 				onComplete:function(){
 					firstSlide.resolve();
 
-					this.currentSlide
+					_self.currentSlide
 						.hide()
 						.css({left:0});
-				}.bind(this)
+				}
 			});
 
 			TweenMax.to(this.nextSlide, this.params.transitionTime, {
-				left: "+="+(this.params.slideWidth * (this.direction * -1)),
+				left: 0,
 				
 				onComplete:function(){
 					secondSlide.resolve();
 				}
 			});
 
+			_self = this;
 			$.when(firstSlide, secondSlide).then(function(){
-				this.currentIndex = this.nextIndex;
+				_self.currentIndex = _self.nextIndex;
 
 				animationDeferred.resolve();
-			}.bind(this));
+			});
 
 			return animationDeferred;
 		},
@@ -316,10 +327,12 @@ function Neutrino() {
 		// Sets the timeout function to call _initSlides after each tick.
 		//=====================================================================
 		_setTimer : function(){
+			var _self = this;
+
 			this.timer = setTimeout(function(){
-				this._initSlides();
-				this._changeSlide();
-			}.bind(this), this.params.timer);
+				_self._initSlides();
+				_self._changeSlide();
+			}, this.params.timer);
 		}
 	}
 
