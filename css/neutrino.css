@@ -58,6 +58,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   position: absolute;
   top: 0;
   left: 0;
+  display: none;
+}
+.neutrino .slide:first-child {
+  display: block;
 }
 .neutrino .arrow {
   height: 45px;
