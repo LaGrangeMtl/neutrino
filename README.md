@@ -2,6 +2,7 @@ Neutrino
 ========
 Neutrino is a flexible jQuery based slideshow plugin that requires minimum markup.
 
+##[DEMO](http://http://lagrangemtl.github.io/neutrino/)
 
 Dependencies
 ------------
