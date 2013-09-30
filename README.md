@@ -35,7 +35,7 @@ $(".neutrino").neutrino();
 
 You can customize WhatsNearby using an settings argument (more details on all settings will follow):
 ````js
-$(".neutrino").neutrino({ zoom:14, address:"Montréal, Qc" });
+$(".neutrino").neutrino();
 ````
 
 Options
