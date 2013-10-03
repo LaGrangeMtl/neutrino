@@ -33,7 +33,7 @@ Using jQuery, setup Neutrino on the selected element :
 $(".neutrino").neutrino();
 ````
 
-You can customize WhatsNearby using an settings argument (more details on all settings will follow):
+You can customize Neutrino using a settings argument (more details on all settings will follow):
 ````js
 $(".neutrino").neutrino();
 ````
