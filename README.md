@@ -22,7 +22,7 @@ To set up Neutrino, simply add a div tag with the class "neutrino" and then add 
 adding div tags with the class "slide". You need to have at least to slides for Neutrino to work because it 
 would be quite silly to make a slideshow with only one slide, wouldn't it?
 ````html
-<div id="neutrino">
+<div class="neutrino">
 	<div class="slide"></div>
 	<div class="slide"></div>
 </div>
