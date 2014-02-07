@@ -1,6 +1,10 @@
 Patch notes
 -----------------------------
 
+#####-  0.6.0 : 
+- Major update of the script to make it a better jQuery plugin.
+- Update of the folder structures.
+
 #####-  0.5.0 : 
 - Deleted AMD folder. No longer needed.
 - Major update to the README.md file and added a CHANGELOG.md file.
