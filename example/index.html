@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="css/neutrino.css" />
+		<link rel="stylesheet" type="text/css" href="css/example.css" />
+
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+		<script type="text/javascript" src="../source/js/neutrino.jquery.js"></script>
+
+		<title>Neutrino example</title>
+	</head>
+	<body>
+		<div class="wrapper">
+			<h1>Slider with arrows and nav</h1>
+			<div class="neutrino n1">
+				<div class="slide">
+					<img src="http://placecage.com/940/300" />
+				</div>
+				<div class="slide">
+					<img src="http://placecage.com/g/940/300" />
+				</div>
+			</div>
+
+			<h1>Slider without arrows and nav</h1>
+			<div class="neutrino n2">
+				<div class="slide">
+					<img src="http://placecage.com/940/300" />
+				</div>
+				<div class="slide">
+					<img src="http://placecage.com/g/940/300" />
+				</div>
+			</div>
+
+			<h1>Slider with no timer</h1>
+			<div class="neutrino n3">
+				<div class="slide">
+					<img src="http://placecage.com/940/300" />
+				</div>
+				<div class="slide">
+					<img src="http://placecage.com/g/940/300" />
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript">
+			(function($){
+				$(document).ready(function(){
+					var sliderOne = $('.n1');
+					var sliderTwo = $('.n2');
+					var sliderThree = $('.n3');
+
+					sliderOne.neutrino({
+						hasArrows: true,
+						hasNav: true
+					});
+
+					sliderTwo.neutrino({});
+
+					sliderThree.neutrino({
+						hasArrows: true,
+						hasNav: true,
+						timer: 0
+					});
+				});
+			})(jQuery);
+		</script>
+	</body>
+</html>

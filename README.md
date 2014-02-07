@@ -1,8 +1,6 @@
 Neutrino
 ========
-Neutrino is a flexible jQuery based slideshow plugin that requires minimum markup.
-
-##[DEMO](http://lagrangemtl.github.io/neutrino/)
+Neutrino is a flexible jQuery based slideshow plugin that requires minimum markup. Styles are all in the LESS/CSS files and so both the styles and the JavaScript are required for Neutrino to work.
 
 Dependencies
 ------------
@@ -33,19 +31,19 @@ Using jQuery, setup Neutrino on the selected element :
 $(".neutrino").neutrino();
 ````
 
-You can customize Neutrino using a settings argument (more details on all settings will follow):
+You can customize Neutrino using an options argument (more details on all options will follow):
 ````js
-$(".neutrino").neutrino();
+$(".neutrino").neutrino(options);
 ````
 
 Options
 -------
 ````js
-settings: {
+options: {
 	transitionType: 'slide', // A string representing the type of transition, currently, only 'slide' is supported.
 	transitionTime: 0.75, // The time in SECONDS that the animation between each slides will take.
 	timer: 3500, // The time in MILLISECONDS between each animations. 3500 is default. If set to 0, there will not be a timed loop.
 	hasArrows: false, // False is default. If set to true, Neutrino will add arrows on each sides of the slideshow.
-	hasNav: false // False is default. If set to true, Neutrino will add a navigation (button styled list) at the bottom of the slideshow.
+	hasNav: false // False is default. If set to true, Neutrino will add a navigation at the bottom of the slideshow.
 }
 ````
