@@ -40,10 +40,16 @@ Options
 -------
 ````js
 options: {
-	transitionType: 'slide', // A string representing the type of transition, currently, only 'slide' is supported.
+	transitionType: 'slide', // A string representing the type of transition
 	transitionTime: 0.75, // The time in SECONDS that the animation between each slides will take.
 	timer: 3500, // The time in MILLISECONDS between each animations. 3500 is default. If set to 0, there will not be a timed loop.
 	hasArrows: false, // False is default. If set to true, Neutrino will add arrows on each sides of the slideshow.
 	hasNav: false // False is default. If set to true, Neutrino will add a navigation at the bottom of the slideshow.
 }
+````
+
+options.transitionType : Choices available are 
+````js
+	'slide'
+	'slideFluid'
 ````

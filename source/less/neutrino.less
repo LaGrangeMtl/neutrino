@@ -31,6 +31,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 @navItemHeight: 15px;
 
 .neutrino {
+	.neutrinoMixin(@slideHeight, @arrowHeight, @arrowWidth, @arrowSidePadding, @navHeight, @bgColorNav, @navItemWidth, @navItemHeight);
+}
+
+.neutrinoMixin(@slideHeight, @arrowHeight, @arrowWidth, @arrowSidePadding, @navHeight, @bgColorNav, @navItemWidth, @navItemHeight) {
 	width: 100%;
 	height: @slideHeight;
 
@@ -50,7 +54,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			list-style-type: none;
 			height: @navHeight;
 			line-height: @navHeight;
-			background: @bgColorNav;
+			//background: @bgColorNav;
 
 			li {
 				cursor: pointer;

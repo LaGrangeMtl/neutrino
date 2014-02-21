@@ -245,6 +245,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 			this.nextSlide = this.slides.eq(this.nextIndex);
 
+			switch(this.options.transitionType) {
+				case 'slide': break;
+				case 'slideFluid': this._setupSlideFluidHeight(); break;
+				default: console.error('Neutrino: Unknown animation type.'); return;
+			}
+
 			this.slides.hide();
 			this.currentSlide.show();
 		},
@@ -263,10 +269,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			if(this.options.hasNav)
 				this.navButtons.off('.neutrino');
 
-			if(this.options.transitionType == 'slide')
-				animation = this._slide();
-			else
-				alert('Only the SLIDE effect is working right now.');
+			switch(this.options.transitionType) {
+				case 'slide': animation = this._slide(); break;
+				case 'slideFluid': animation = this._setupSlideFluidHeight(); break;
+				default: console.error('Neutrino: Unknown animation type.'); return;
+			}
 
 			var _self = this;
 			animation.done(function(){
@@ -326,6 +333,75 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			_self = this;
 			$.when(firstSlide, secondSlide).then(function(){
 				_self.currentIndex = _self.nextIndex;
+
+				animationDeferred.resolve();
+			});
+
+			return animationDeferred;
+		},
+
+		//=====================================================================
+		// _setupSlideFluidHeight : Private Function
+		//
+		// Sets up the height of the root to the current slide's height
+		//=====================================================================
+		_setupSlideFluidHeight: function(){
+			this.slides.css("height", "auto");
+			this.root.addClass("fluid");
+
+			var h = this.currentSlide.outerHeight();
+			TweenMax.to(this.root, 0, { height:h });
+		},
+
+		//=====================================================================
+		// _slideFluidHeight : Private Function
+		//
+		// @returns : $.Deferred();
+		//
+		// Function to be called when the transitionType property is set to
+		// 'slideFluid'.
+		//=====================================================================
+		_slideFluidHeight : function(){
+			var firstSlide = $.Deferred();
+			var secondSlide = $.Deferred();
+			var animationDeferred = $.Deferred();
+
+			this.nextSlide
+				.css({left: (this.options.slideWidth * this.direction)})
+				.show();
+				
+			var _self = this;
+
+			TweenMax.to(this.currentSlide, this.options.transitionTime, {
+				left: "+="+(this.options.slideWidth * (this.direction * -1)),
+				ease: this.options.ease,
+				delay: this.options.transitionTime / 2,
+				onComplete:function(){
+					firstSlide.resolve();
+
+					_self.currentSlide
+						.hide()
+						.css({left:0});
+				}
+			});
+
+			var h = this.nextSlide.outerHeight();
+
+			var _self = this;
+			this.nav.fadeOut(this.options.fadeInTransitionTime, function(){ _self.root.css('height', h); })
+					.fadeIn(this.options.fadeInTransitionTime);
+			TweenMax.to(this.nextSlide, this.options.transitionTime, {
+				left: 0,
+				delay: this.options.transitionTime / 2,
+				
+				onComplete:function(){
+					secondSlide.resolve();
+				}
+			});
+			_self.currentIndex = _self.nextIndex;
+			this._updateNav();
+
+			$.when(firstSlide, secondSlide).then(function(){
 
 				animationDeferred.resolve();
 			});
