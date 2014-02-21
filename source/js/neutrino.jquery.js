@@ -112,15 +112,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// data attribute on the tags.
 		//=====================================================================
 		_setArrowEvents : function() {
+			var _self = this;
 			this.arrows.on('click.neutrino', function(e){
-				clearTimeout(this.timer);
+				clearTimeout(_self.timer);
 
-				this.direction = $(e.target).data('direction');
+				_self.direction = $(e.target).data('direction');
 
-				this.arrows.off('.neutrino');
-				this._initSlides(e);
-				this._changeSlide();
-			}.bind(this))
+				_self.arrows.off('.neutrino');
+				_self._initSlides(e);
+				_self._changeSlide();
+			})
 		},
 
 		//=====================================================================
