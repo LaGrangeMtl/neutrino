@@ -48,10 +48,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this.root = $(context);
 			this.slides = this.root.find('.slide');
 
-			if(this.slides.length <= 1){
+			/*if(this.slides.length <= 1){
 				console.log("Neutrino : There is only " + this.slides.length + " slides set in the markup. Neutrino needs at least 2 slides to work.");
 				return;
-			}
+			}/**/
 
 			// Default values
 			this.options = {
@@ -64,6 +64,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			};
 
 			this.options = $.extend({},this.options,options);
+
+			if(this.slides.length <= 1){
+				this.options.hasNav = false;
+				this.options.hasArrows = false;
+			}
 			
 			this._build();
 
@@ -95,7 +100,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				this._updateNav();
 			}
 
-			if(this.options.timer > 0 || this.options == undefined) {
+			if((this.options.timer > 0 || this.options == undefined) && this.slides.length > 1) {
 				this._initSlides();
 				this._setTimer();
 			}
