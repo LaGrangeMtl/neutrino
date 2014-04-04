@@ -45,13 +45,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// setting is done, it starts the timer.
 		//=====================================================================
 		init : function(options, context) {
+			this.TWEENER = (TweenMax != undefined) ? TweenMax : TweenLite;
 			this.root = $(context);
 			this.slides = this.root.find('.slide');
-
-			/*if(this.slides.length <= 1){
-				console.log("Neutrino : There is only " + this.slides.length + " slides set in the markup. Neutrino needs at least 2 slides to work.");
-				return;
-			}/**/
 
 			// Default values
 			this.options = {
@@ -315,7 +311,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				.show();
 
 			var _self = this;
-			TweenMax.to(this.currentSlide, this.options.transitionTime, {
+			this.TWEENER.to(this.currentSlide, this.options.transitionTime, {
 				left: "+="+(this.options.slideWidth * (this.direction * -1)),
 				
 				onComplete:function(){
@@ -327,7 +323,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				}
 			});
 
-			TweenMax.to(this.nextSlide, this.options.transitionTime, {
+			this.TWEENER.to(this.nextSlide, this.options.transitionTime, {
 				left: 0,
 				
 				onComplete:function(){
@@ -355,7 +351,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this.root.addClass("fluid");
 
 			var h = this.currentSlide.outerHeight();
-			TweenMax.to(this.root, 0, { height:h });
+			this.TWEENER.to(this.root, 0, { height:h });
 		},
 
 		//=====================================================================
@@ -377,7 +373,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				
 			var _self = this;
 
-			TweenMax.to(this.currentSlide, this.options.transitionTime, {
+			this.TWEENER.to(this.currentSlide, this.options.transitionTime, {
 				left: "+="+(this.options.slideWidth * (this.direction * -1)),
 				ease: this.options.ease,
 				delay: this.options.transitionTime / 2,
@@ -395,7 +391,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			var _self = this;
 			this.nav.fadeOut(this.options.fadeInTransitionTime, function(){ _self.root.css('height', h); })
 					.fadeIn(this.options.fadeInTransitionTime);
-			TweenMax.to(this.nextSlide, this.options.transitionTime, {
+			this.TWEENER.to(this.nextSlide, this.options.transitionTime, {
 				left: 0,
 				delay: this.options.transitionTime / 2,
 				
