@@ -45,7 +45,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// setting is done, it starts the timer.
 		//=====================================================================
 		init : function(options, context) {
-			this.TWEENER = (TweenMax != undefined) ? TweenMax : TweenLite;
+			this.TWEENER = window.TweenMax || window.TweenLite;
 			this.root = $(context);
 			this.slides = this.root.find('.slide');
 
@@ -56,7 +56,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				slideWidth: this.slides.eq(0).width(),
 				timer: 3500,
 				hasArrows: false,
-				hasNav: false
+				hasNav: false,
+				slidesPerPage: 1
 			};
 
 			this.options = $.extend({},this.options,options);
@@ -87,6 +88,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this.currentIndex = 0;
 			this.direction = 1;
 
+			// FAKE PAGINATION
+			if(this.options.slidesPerPage > 1){
+				this._paginate();
+			}
+
 			if(this.options.hasArrows) {
 				this._createArrows();
 			}
@@ -104,6 +110,46 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				this.options.timer = false;
 				this._initSlides();
 			}
+		},
+
+		_paginate : function(){
+			this.slides.show();
+			var nSlideContainersNeeded = this.slides.length / this.options.slidesPerPage;
+			var slidesTemp = [];
+			var slideContainers = [];
+			var slideContainerIndex = 0;
+			var _height = this.slides.eq(0).height();
+
+			if(this.slides.length % this.options.slidesPerPage == 1)
+				nSlideContainersNeeded = Math.floor(nSlideContainersNeeded) + 1;
+
+			for (var i = 0; i < nSlideContainersNeeded; i++) {
+				slideContainers.push($('<div class="slideContainer"></div>'));
+			};
+
+			for (var i = 0; i < this.slides.length; i++) {
+				slidesTemp.push(this.slides[i]);
+
+				if(((i + 1) % this.options.slidesPerPage == 0) || (i == this.slides.length - 1)){
+					for (var j = 0; j < slidesTemp.length; j++) {
+						var _slide = $(slidesTemp[j]).addClass('floating');
+						slideContainers[slideContainerIndex].append(_slide);
+					};
+
+					slideContainerIndex++;
+					for(var k = 0; k < this.options.slidesPerPage; k++){
+						slidesTemp.shift();
+					}
+				}
+			};
+
+			for (var i = 0; i < slideContainers.length; i++) {
+				this.root.append(slideContainers[i]);
+			};
+
+			this.slides = this.root.find('.slideContainer');
+			this.slides.eq(0).show();
+			this.options.slideWidth = this.slides.eq(0).width();
 		},
 
 		//=====================================================================

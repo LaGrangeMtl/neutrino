@@ -21,6 +21,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 @slideHeight: 300px;
+@slideWidth: 33%;
 @arrowHeight: 45px;
 @arrowWidth: 45px;
 @arrowSidePadding: 10px;
@@ -75,12 +76,36 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	}
 
 	.slide {
-		width: 100%;
+		width: @slideWidth;
 		height: @slideHeight;
 
 		position: absolute;
 			top: 0;
 			left: 0;
+
+		display: none;
+
+		&:first-child {
+			display: block;
+		}
+
+		&.floating {
+			display: block;
+			position: relative;
+				top: auto;
+				left: auto;
+
+			float: left;
+		}
+	}
+
+	.slideContainer {
+		position: absolute;
+			top:0;
+			left:0;
+
+		width:100%;
+		height:@slideHeight;
 
 		display: none;
 
