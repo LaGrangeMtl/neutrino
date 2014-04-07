@@ -468,6 +468,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				_self._initSlides();
 				_self._changeSlide();
 			}, this.options.timer);
+		},
+
+		//=====================================================================
+		// resetTimer : Public Function
+		//
+		// Resets the timeout the timer
+		//=====================================================================
+		resetTimer : function(){
+			var _self = this;
+			clearTimeout(this.timer);
+			this._setTimer();
+		},
+
+		//=====================================================================
+		// stopTimer : Private Function
+		//
+		// Stops the timer
+		//=====================================================================
+		stopTimer : function(){
+			var _self = this;
+			clearTimeout(this.timer);
 		}
 	};
 
