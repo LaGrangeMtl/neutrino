@@ -319,6 +319,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				this.nextIndex = 0;
 			else if (this.nextIndex < 0)
 				this.nextIndex = this.slides.length - 1;
+
+			if(this.nextIndex == this.currentIndex)
+				return;
 			
 			this.nextSlide = this.slides.eq(this.nextIndex);
 			this.direction = (this.nextIndex > this.currentIndex) ? 1 : -1;
