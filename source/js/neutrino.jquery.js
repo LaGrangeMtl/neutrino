@@ -112,8 +112,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			}
 		},
 
+		//=====================================================================
+		// _paginate : Private Function
+		//
+		// Comments to come
+		//=====================================================================
 		_paginate : function(){
-			this.slides.show();
+			this.slides.addClass('floating');
 			var nSlideContainersNeeded = this.slides.length / this.options.slidesPerPage;
 			var slidesTemp = [];
 			var slideContainers = [];
@@ -132,7 +137,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 				if(((i + 1) % this.options.slidesPerPage == 0) || (i == this.slides.length - 1)){
 					for (var j = 0; j < slidesTemp.length; j++) {
-						var _slide = $(slidesTemp[j]).addClass('floating');
+						var _slide = $(slidesTemp[j]);
 						slideContainers[slideContainerIndex].append(_slide);
 					};
 
@@ -143,13 +148,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				}
 			};
 
-			for (var i = 0; i < slideContainers.length; i++) {
-				this.root.append(slideContainers[i]);
-			};
-
+			this.root.append(slideContainers);
 			this.slides = this.root.find('.slideContainer');
 			this.slides.eq(0).show();
-			this.options.slideWidth = this.slides.eq(0).width();
+			this.options.slideWidth = this.slides.eq(0).outerWidth();
 		},
 
 		//=====================================================================
@@ -300,6 +302,34 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 			this.slides.hide();
 			this.currentSlide.show();
+		},
+
+		//=====================================================================
+		// goToSlide : Public Function
+		//
+		// @params : slideIndex
+		//		Index of the slide you want to go to.
+		//=====================================================================
+		goToSlide : function(slideIndex){
+			this.currentSlide = this.slides.eq(this.currentIndex);
+
+			this.nextIndex = slideIndex;
+
+			if(this.nextIndex >= this.slides.length)
+				this.nextIndex = 0;
+			else if (this.nextIndex < 0)
+				this.nextIndex = this.slides.length - 1;
+			
+			this.nextSlide = this.slides.eq(this.nextIndex);
+			this.direction = (this.nextIndex > this.currentIndex) ? 1 : -1;
+
+			switch(this.options.transitionType) {
+				case 'slide': break;
+				case 'slideFluid': this._setupSlideFluidHeight(); break;
+				default: console.error('Neutrino: Unknown animation type.'); return;
+			}
+
+			this._changeSlide();
 		},
 
 		//=====================================================================
