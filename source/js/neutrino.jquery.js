@@ -148,6 +148,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				}
 			};
 
+			if(slideContainers[slideContainers.length - 1].children().length < this.options.slidesPerPage){
+				for(var i = 0; i < slideContainers[slideContainers.length - 1].children().length; i++){	
+					slideContainers[slideContainers.length - 1].children().css({
+						width:(100/slideContainers[slideContainers.length - 1].children().length) + '%'
+					});
+				}
+			}
+
 			this.root.append(slideContainers);
 			this.slides = this.root.find('.slideContainer');
 			this.slides.eq(0).show();
@@ -344,14 +352,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// property of the slideshow, it will call the right animation function
 		//=====================================================================
 		_changeSlide : function(){
-			var animation;
+			var animation = $.Deferred();
 
 			if(this.options.hasNav)
 				this.navButtons.off('.neutrino');
 
 			switch(this.options.transitionType) {
 				case 'slide': animation = this._slide(); break;
-				case 'slideFluid': animation = this._setupSlideFluidHeight(); break;
+				case 'slideFluid': animation = this._slideFluidHeight(); break;
 				default: console.error('Neutrino: Unknown animation type.'); return;
 			}
 

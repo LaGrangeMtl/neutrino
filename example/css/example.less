@@ -1,0 +1,56 @@
+@charset "utf-8";
+
+@import "bootstrap.min.css";
+@import "neutrino.less";
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: content-box;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	//background: url('../img/light_grey.png');
+	height: 100%;
+}
+
+.wrapper {
+	width: 940px;
+	padding: 25px 10px;
+	margin: 0 auto;
+	min-height: 100%;
+
+	background: #fff;
+}
+
+h1 {
+	margin-top: 60px;
+}
+
+header h1 {
+	margin-top: 30px;
+}
+
+ul {
+	margin-left: 20px;
+}
+
+// NEUTRINO
+.neutrino-paginated {
+	@slideHeight: 300px;
+	@slideWidth: 33%;
+	@arrowHeight: 45px;
+	@arrowWidth: 45px;
+	@arrowSidePadding: 10px;
+
+	@navHeight: 30px;
+	@bgColorNav: #0a0a0a;
+	@navItemWidth: 15px;
+	@navItemHeight: 15px;
+
+	.neutrinoMixin(@slideHeight, @slideWidth, @arrowHeight, @arrowWidth, @arrowSidePadding, @navHeight, @bgColorNav, @navItemWidth, @navItemHeight);
+}

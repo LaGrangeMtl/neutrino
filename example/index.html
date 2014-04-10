@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="css/neutrino.css" />
 		<link rel="stylesheet" type="text/css" href="css/example.css" />
 
 		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
@@ -12,39 +11,112 @@
 	</head>
 	<body>
 		<div class="wrapper">
-			<h1>Slider with arrows and nav</h1>
-			<div class="neutrino n1">
-				<div class="slide">
-					<img src="http://placecage.com/940/300" />
-				</div>
-				<div class="slide">
-					<img src="http://placecage.com/g/940/300" />
-				</div>
-				<div class="slide">
-					<img src="http://placecage.com/940/300" />
-				</div>
-				<div class="slide">
-					<img src="http://placecage.com/g/940/300" />
+			<header>
+				<h1>Neutrino examples</h1>
+				<ul>
+					<li><a href="#default">Default</a></li>
+					<li><a href="#arrowsAndNav">With arrows and navigation</a></li>
+					<li><a href="#noTimer">Without a timed loop</a></li>
+					<li><a href="#paginate">With pagination (grouped slides)</a></li>
+				</ul>
+			</header>
+
+			<div id="default">
+				<h1>Default settings</h1>
+				<p>This is what it looks like using the default settings of Neutrino</p>
+<pre>$('.n1').neutrino();</pre>
+				<div class="neutrino n1">
+					<div class="slide">
+						<img src="http://placecage.com/940/300" />
+					</div>
+					<div class="slide">
+						<img src="http://placecage.com/g/940/300" />
+					</div>
 				</div>
 			</div>
 
-			<h1>Slider without arrows and nav</h1>
-			<div class="neutrino n2">
-				<div class="slide">
-					<img src="http://placecage.com/940/300" />
-				</div>
-				<div class="slide">
-					<img src="http://placecage.com/g/940/300" />
+			<div id="arrowsAndNav">
+				<h1>Arrows and nav</h1>
+<pre>$('.n2').neutrino({
+    hasArrows: true,
+    hasNav: true
+});</pre>
+				<div class="neutrino n2">
+					<div class="slide">
+						<img src="http://placecage.com/940/300" />
+					</div>
+					<div class="slide">
+						<img src="http://placecage.com/g/940/300" />
+					</div>
 				</div>
 			</div>
 
-			<h1>Slider with no timer</h1>
-			<div class="neutrino n3">
-				<div class="slide">
-					<img src="http://placecage.com/940/300" />
+			<div id="noTimer">
+				<h1>No timer</h1>
+<pre>$('.n3').neutrino({
+    hasArrows: true,
+    hasNav: true,
+    timer: 0
+});</pre>
+				<div class="neutrino n3">
+					<div class="slide">
+						<img src="http://placecage.com/940/300" />
+					</div>
+					<div class="slide">
+						<img src="http://placecage.com/g/940/300" />
+					</div>
 				</div>
-				<div class="slide">
-					<img src="http://placecage.com/g/940/300" />
+			</div>
+
+			<div id="noTimer">
+				<h1>Fluid height</h1>
+				<p>You might have to show a certain number of slides that may have a variable height. We've made it possible.</p>
+				<p>Please note that this feature works way better when it is text driven slides and not images like this example. Also note that there seems to be a problem with arrows at the moment.</p>
+<pre>$('.n4').neutrino({
+    hasNav: true,
+    transitionType:'slideFluid'
+});</pre>
+				<div class="neutrino n4">
+					<div class="slide">
+						<img src="http://placecage.com/940/400" />
+					</div>
+					<div class="slide">
+						<img src="http://placecage.com/g/940/300" />
+					</div>
+				</div>
+			</div>
+
+			<div id="paginate">
+				<h1>Pagination</h1>
+				<p>You might want to show a certain number of images / slides inside one big slide, this is possible.</p>
+
+				<p>Of course, since Neutrino lets you place any HTML element you want inside a slide element, you can paginate it yourself (with a templating system or PHP for example), or you could let the script do it for you!</p>
+
+				<p>This obviously works better if you divide the numbers of slide by a pair number so that you have a resulting integer, such as 4 images (25%). In this case (3 images), you can see that 33% width leaves a blank space on the right, but CSS is bad to round up so if you make the @slideWidth param of the neutrino mixin to 33.3%, the slides will overflow.</p>
+
+				<p>As you will see in the example below, if the last "page" does not contain the same number of slides as the other ones, it will resize the slides inside it so that they take all of the space. So since pages are defined by groups of 3 images here and that we only have 5 elements, the last slide will be composed of 2 images that both take half the space available. If we had 4 images instead of 5, the last one would take 100% of the space available.</p>
+
+<pre>$('.n5').neutrino({
+    hasNav: true,
+    hasArrows:true,
+    slidesPerPage:3
+});</pre>
+				<div class="neutrino-paginated n5">
+					<div class="slide">
+						<img src="http://placecage.com/310/300" />
+					</div>
+					<div class="slide">
+						<img src="http://placecage.com/g/310/300" />
+					</div>
+					<div class="slide">
+						<img src="http://placecage.com/310/300" />
+					</div>
+					<div class="slide">
+						<img src="http://placecage.com/g/470/300" />
+					</div>
+					<div class="slide">
+						<img src="http://placecage.com/g/470/300" />
+					</div>
 				</div>
 			</div>
 		</div>
@@ -55,19 +127,32 @@
 					var sliderOne = $('.n1');
 					var sliderTwo = $('.n2');
 					var sliderThree = $('.n3');
+					var sliderFour = $('.n4');
+					var sliderFive = $('.n5');
 
-					sliderOne.neutrino({
+					sliderOne.neutrino();
+
+					sliderTwo.neutrino({
 						hasArrows: true,
-						hasNav: true,
-						slidesPerPage:3
+						hasNav: true
 					});
-
-					sliderTwo.neutrino({});
 
 					sliderThree.neutrino({
 						hasArrows: true,
 						hasNav: true,
 						timer: 0
+					});
+
+					sliderFour.neutrino({
+						//hasArrows: true,
+						hasNav: true,
+						transitionType:'slideFluid'
+					});
+
+					sliderFive.neutrino({
+						hasArrows: true,
+						hasNav: true,
+						slidesPerPage:3
 					});
 				});
 			})(jQuery);
