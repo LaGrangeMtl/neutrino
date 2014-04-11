@@ -45,7 +45,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// setting is done, it starts the timer.
 		//=====================================================================
 		init : function(options, context) {
-			this.TWEENER = window.TweenMax || window.TweenLite;
+			this.TWEENER = window.TweenMax;
 			this.root = $(context);
 			this.slides = this.root.find('.slide');
 
@@ -115,7 +115,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		//=====================================================================
 		// _paginate : Private Function
 		//
-		// Comments to come
+		// Paginates the slideshow if the options : slidesPerPage was changed
+		// by the user. Will set slides in containers and deal with their width
 		//=====================================================================
 		_paginate : function(){
 			this.slides.addClass('floating');
@@ -124,6 +125,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			var slideContainers = [];
 			var slideContainerIndex = 0;
 			var _height = this.slides.eq(0).height();
+			var lastSlideContainerChildren;
 
 			if(this.slides.length % this.options.slidesPerPage == 1)
 				nSlideContainersNeeded = Math.floor(nSlideContainersNeeded) + 1;
@@ -138,6 +140,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				if(((i + 1) % this.options.slidesPerPage == 0) || (i == this.slides.length - 1)){
 					for (var j = 0; j < slidesTemp.length; j++) {
 						var _slide = $(slidesTemp[j]);
+						_slide.css({
+							width:(100/this.options.slidesPerPage) + '%'
+						});
 						slideContainers[slideContainerIndex].append(_slide);
 					};
 
@@ -148,10 +153,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				}
 			};
 
-			if(slideContainers[slideContainers.length - 1].children().length < this.options.slidesPerPage){
-				for(var i = 0; i < slideContainers[slideContainers.length - 1].children().length; i++){	
-					slideContainers[slideContainers.length - 1].children().css({
-						width:(100/slideContainers[slideContainers.length - 1].children().length) + '%'
+			lastSlideContainerChildren = slideContainers[slideContainers.length - 1].children();
+			if(lastSlideContainerChildren.length < this.options.slidesPerPage){
+				for(var i = 0; i < lastSlideContainerChildren.length; i++){	
+					lastSlideContainerChildren.css({
+						width:(100/lastSlideContainerChildren.length) + '%'
 					});
 				}
 			}
@@ -304,6 +310,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 			switch(this.options.transitionType) {
 				case 'slide': break;
+				case 'fade': break;
 				case 'slideFluid': this._setupSlideFluidHeight(); break;
 				default: console.error('Neutrino: Unknown animation type.'); return;
 			}
@@ -317,8 +324,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		//
 		// @params : slideIndex
 		//		Index of the slide you want to go to.
+		//
+		// Go directly to a slide. The direction will be calculated depending
+		// on the slide you want to go to.
 		//=====================================================================
 		goToSlide : function(slideIndex){
+			clearTimeout(_self.timer);
 			this.currentSlide = this.slides.eq(this.currentIndex);
 
 			this.nextIndex = slideIndex;
@@ -336,6 +347,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 			switch(this.options.transitionType) {
 				case 'slide': break;
+				case 'fade': break;
 				case 'slideFluid': this._setupSlideFluidHeight(); break;
 				default: console.error('Neutrino: Unknown animation type.'); return;
 			}
@@ -360,6 +372,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			switch(this.options.transitionType) {
 				case 'slide': animation = this._slide(); break;
 				case 'slideFluid': animation = this._slideFluidHeight(); break;
+				case 'fade': animation = this._fade(); break;
 				default: console.error('Neutrino: Unknown animation type.'); return;
 			}
 
@@ -378,6 +391,52 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 					_self._setTimer();
 				}
 			})
+		},
+
+		//=====================================================================
+		// _fade : Private Function
+		//
+		// @returns : $.Deferred();
+		//
+		// Function to be called when the transitionType property is set to
+		// 'fade'.
+		//=====================================================================
+		_fade : function(){
+			var firstSlide = $.Deferred();
+			var secondSlide = $.Deferred();
+			var animationDeferred = $.Deferred();
+
+			this.nextSlide.css({zIndex:1, opacity:0}).show();
+
+			this.currentSlide.css({zIndex:2})
+
+			var _self = this;
+			this.TWEENER.to(this.currentSlide, this.options.transitionTime, {
+				opacity: 0,
+				
+				onComplete:function(){
+					firstSlide.resolve();
+
+					_self.currentSlide.hide().css({zIndex:1});
+				}
+			});
+
+			this.TWEENER.to(this.nextSlide, this.options.transitionTime, {
+				opacity: 1,
+				
+				onComplete:function(){
+					secondSlide.resolve();
+				}
+			});
+
+			_self = this;
+			$.when(firstSlide, secondSlide).then(function(){
+				_self.currentIndex = _self.nextIndex;
+
+				animationDeferred.resolve();
+			});
+
+			return animationDeferred;
 		},
 
 		//=====================================================================

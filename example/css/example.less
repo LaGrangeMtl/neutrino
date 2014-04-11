@@ -27,6 +27,12 @@ body {
 	background: #fff;
 }
 
+@media screen and (max-width:940px){
+	.wrapper {
+		width: 100%;
+	}
+}
+
 h1 {
 	margin-top: 60px;
 }
@@ -37,20 +43,4 @@ header h1 {
 
 ul {
 	margin-left: 20px;
-}
-
-// NEUTRINO
-.neutrino-paginated {
-	@slideHeight: 300px;
-	@slideWidth: 33%;
-	@arrowHeight: 45px;
-	@arrowWidth: 45px;
-	@arrowSidePadding: 10px;
-
-	@navHeight: 30px;
-	@bgColorNav: #0a0a0a;
-	@navItemWidth: 15px;
-	@navItemHeight: 15px;
-
-	.neutrinoMixin(@slideHeight, @slideWidth, @arrowHeight, @arrowWidth, @arrowSidePadding, @navHeight, @bgColorNav, @navItemWidth, @navItemHeight);
 }
