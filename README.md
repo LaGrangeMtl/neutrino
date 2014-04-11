@@ -65,3 +65,8 @@ options.transitionType : Choices available are
 
 Public methods
 -------
+````js
+goToSlide(slideIndex);
+
+Used to change directly to a slide if needed.
+````
