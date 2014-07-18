@@ -102,6 +102,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				this._updateNav();
 			}
 
+			if(this.options.centerContent !== false){
+				this._centerContent();
+			}
+
 			if((this.options.timer > 0 || this.options == undefined) && this.slides.length > 1) {
 				this._initSlides();
 				this._setTimer();
@@ -109,6 +113,34 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			else {
 				this.options.timer = false;
 				this._initSlides();
+			}
+		},
+
+		_centerContent : function(){
+			for(var i = 0; i < this.slides.length; i++){
+				var posTop;
+				var _slide = this.slides.eq(i);
+				_slide.show();
+				var content = _slide.find('.content');
+				
+				if(content.length > 0){
+					if(this.options.centerContent.inBetweenNavAndTop){
+						var navPadding = (this.nav.height() - this.nav.find('li').eq(0).height()) / 2;
+						var availableSpace = this.root.height() - this.nav.height() + navPadding;
+
+						posTop = (availableSpace / 2) - (content.height() / 2);
+					}
+					else {
+						posTop = (this.root.height() / 2) - (content.height() / 2);
+					}
+
+					content.css({
+						position:'absolute',
+						left:'0',
+						top:posTop+'px',
+						width:'100%'
+					})
+				}
 			}
 		},
 
@@ -262,7 +294,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			var liMargin = this.navButtons.eq(1).css('margin-left');
 			liMargin = liMargin.substring(0, liMargin.length - 2);
 
-			this.nav.find('ul').css({width: (liWidth * nbOfSlides) + (liMargin * (nbOfSlides - 1)) + "px"})
+			var ulPadding = this.nav.find('ul').css('padding-left');
+			ulPadding = ulPadding.substring(0, ulPadding.length - 2);
+
+			this.nav.find('ul').css({width: (liWidth * nbOfSlides) + (liMargin * (nbOfSlides - 1)) + (ulPadding * 2) + "px"})
 
 			this._setNavEvents();
 		},
@@ -312,6 +347,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				case 'slide': break;
 				case 'fade': break;
 				case 'slideFluid': this._setupSlideFluidHeight(); break;
+				case 'custom':break;
 				default: console.error('Neutrino: Unknown animation type.'); return;
 			}
 
@@ -348,6 +384,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			switch(this.options.transitionType) {
 				case 'slide': break;
 				case 'fade': break;
+				case 'custom': break;
 				case 'slideFluid': this._setupSlideFluidHeight(); break;
 				default: console.error('Neutrino: Unknown animation type.'); return;
 			}
@@ -373,6 +410,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				case 'slide': animation = this._slide(); break;
 				case 'slideFluid': animation = this._slideFluidHeight(); break;
 				case 'fade': animation = this._fade(); break;
+				case 'custom': animation = this._customAnimation(); break;
 				default: console.error('Neutrino: Unknown animation type.'); return;
 			}
 
@@ -391,6 +429,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 					_self._setTimer();
 				}
 			})
+		},
+
+		_customAnimation:function(){
+			var animationDfd = this.options.userCustomTransition.call(this);
+
+			return animationDfd;
 		},
 
 		//=====================================================================

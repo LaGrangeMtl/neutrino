@@ -21,7 +21,7 @@ You also need to include the CSS or use the LESS file to compile it.
 <link rel="stylesheet" type="text/css" href="css/neutrino.css">
 ````
 
-Last, don't forger to include the images provided or make your own to fit your design if you want to use navigation / arrows.
+Last, don't forget to include the images provided or make your own to fit your design if you want to use navigation / arrows.
 
 To set up Neutrino, simply add a div tag with the class "neutrino" and then add as many slides as you want by
 adding div tags with the class "slide". You need to have at least to slides for Neutrino to work because it 
