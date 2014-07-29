@@ -365,10 +365,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// on the slide you want to go to.
 		//=====================================================================
 		goToSlide : function(slideIndex){
+			var targetIndex = slideIndex;
+			if(typeof slideIndex == 'object')
+				targetIndex = slideIndex[0];
+
+			var _self = this;
 			clearTimeout(_self.timer);
 			this.currentSlide = this.slides.eq(this.currentIndex);
-
-			this.nextIndex = slideIndex;
+			this.nextIndex = targetIndex;
 
 			if(this.nextIndex >= this.slides.length)
 				this.nextIndex = 0;
@@ -405,6 +409,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 			if(this.options.hasNav)
 				this.navButtons.off('.neutrino');
+
+			if(this.options.hasArrows)
+				this.arrows.off('.neutrino');
 
 			switch(this.options.transitionType) {
 				case 'slide': animation = this._slide(); break;
@@ -454,6 +461,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 			this.currentSlide.css({zIndex:2})
 
+			//this._updateNav();
+
 			var _self = this;
 			this.TWEENER.to(this.currentSlide, this.options.transitionTime, {
 				opacity: 0,
@@ -473,10 +482,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				}
 			});
 
+			this.currentIndex = _self.nextIndex;
+			this._updateNav();
+			
 			_self = this;
 			$.when(firstSlide, secondSlide).then(function(){
-				_self.currentIndex = _self.nextIndex;
-
 				animationDeferred.resolve();
 			});
 
@@ -636,13 +646,40 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 	};
 
-	$.fn.neutrino = function(options) {
-		if(this.length) {
-			return this.each(function(){
-				var neutrino = Object.create(Neutrino);
-				neutrino.init(options, this);
-				$.data(this, 'neutrino', neutrino);
-			})
+	var fullName = 'neutrino';
+	$.fn[fullName] = function(options) {
+		var input = arguments;
+		if ( this.length ) {
+			return this.each(function () {
+				//plugin is not instanciated. Create it (requires an object or null as arguments)
+				if (!$.data(this, fullName)) {
+					if(typeof options === 'object' || !options){
+						//create an instance of our concrete plugin
+						var instance = Object.create(Neutrino);
+						instance.init(options, this);
+						$.data(this, fullName, instance);
+					} else {
+						$.error( 'Plugin jQuery.' + fullName + " has not yet been instanciated." );
+					}
+				} else if(typeof options === 'string') {
+					//methods that begin with _ are private
+					if(options[0]==='_') {
+						$.error( 'Plugin jQuery.' + fullName + ' : method ' + options + ' is private');
+						return;
+					}
+					
+					//plugin is instanciated, get it
+					var controller = $.data(this, fullName);
+					if(controller[options]) {
+						controller[options](Array.prototype.slice.call(input, 1));
+					} else {
+						$.error( 'Plugin jQuery.' + fullName + " has no method " + options);
+					}
+				} else {
+					$.error( 'Plugin jQuery.' + fullName + " has already been instanciated.");
+				}
+				
+			});
 		}
-	};
+	}
 })(jQuery)
