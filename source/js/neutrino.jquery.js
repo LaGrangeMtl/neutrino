@@ -49,6 +49,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			this.root = $(context);
 			this.slides = this.root.find('.slide');
 
+			this.originalWidth = this.root.width();
+
 			// Default values
 			this.options = {
 				transitionType: 'slide',
@@ -56,8 +58,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				slideWidth: this.slides.eq(0).width(),
 				timer: 3500,
 				hasArrows: false,
+				hasTimer: true,
 				hasNav: false,
-				slidesPerPage: 1
+				slidesPerPage: 1,
+				isResponsive: false
 			};
 
 			this.options = $.extend({},this.options,options);
@@ -69,7 +73,34 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			
 			this._build();
 
+			if(this.options.isResponsive){
+				var _self = this;
+				$(window).on('resize.neutrino', function(){
+					_self._updateProperties();
+				}).resize();
+			}
+
 			return this;
+		},
+
+		_updateProperties:function(){
+			this.options.slideWidth = this.slides.eq(0).width();
+
+			if(this.options.centerContent){
+				var stopCenteringAt = this.options.isResponsive.stopCenteringAt;
+				var stopCentering = (this.options.isResponsive && stopCenteringAt && $(window).width() <= stopCenteringAt);
+
+				this._centerContent(stopCentering);
+			}
+
+			if(this.options.isResponsive.removeArrowsAt && $(window).width() <= this.options.isResponsive.removeArrowsAt){
+				this.arrows.off('.neutrino');
+				this.arrows.hide();
+			}
+			else if(this.options.isResponsive.removeArrowsAt && !this.arrows.is(':visible')){
+				this._setArrowEvents();
+				this.arrows.show();
+			}
 		},
 
 		//=====================================================================
@@ -102,7 +133,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				this._updateNav();
 			}
 
-			if(this.options.centerContent !== false){
+			if(this.options.centerContent){
 				this._centerContent();
 			}
 
@@ -116,22 +147,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			}
 		},
 
-		_centerContent : function(){
+		_centerContent : function(stopCentering){
 			for(var i = 0; i < this.slides.length; i++){
 				var posTop;
 				var _slide = this.slides.eq(i);
 				_slide.show();
 				var content = _slide.find('.content');
 				
-				if(content.length > 0){
+				if(content.length > 0 && !stopCentering){
 					if(this.options.centerContent.inBetweenNavAndTop){
 						var navPadding = (this.nav.height() - this.nav.find('li').eq(0).height()) / 2;
 						var availableSpace = this.root.height() - this.nav.height() + navPadding;
 
-						posTop = (availableSpace / 2) - (content.height() / 2);
+						posTop = Math.round((availableSpace / 2) - (content.height() / 2));
 					}
 					else {
-						posTop = (this.root.height() / 2) - (content.height() / 2);
+						posTop = Math.round((this.root.height() / 2) - (content.height() / 2));
 					}
 
 					content.css({
@@ -141,7 +172,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 						width:'100%'
 					})
 				}
+				else if(content.length > 0) {
+					content.css({
+						position:'absolute',
+						left:'0',
+						top:'0',
+						width:'100%'
+					})
+				}
 			}
+
+			this.slides.hide();
+			this.slides.eq(this.currentIndex).show();
 		},
 
 		//=====================================================================
@@ -210,6 +252,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			var _self = this;
 			this.arrows.on('click.neutrino', function(e){
 				clearTimeout(_self.timer);
+				//deactivate timer altogether on navig, if requested by the options
+				_self.options.hasTimer = !_self.options.clearTimerOnNav;
 
 				_self.direction = $(e.target).data('direction');
 
@@ -251,6 +295,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				}
 				else {
 					clearTimeout(_self.timer);
+					//deactivate timer altogether on navig, if requested by the options
+					_self.options.hasTimer = !_self.options.clearTimerOnNav;
 
 					_self.direction = 0;
 
@@ -439,8 +485,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		},
 
 		_customAnimation:function(){
-			var animationDfd = this.options.userCustomTransition.call(this);
-
+			var animationDfd = this.options.userCustomTransition.call(this, this.currentSlide, this.nextSlide);
+			this.currentIndex = this.nextIndex;
 			return animationDfd;
 		},
 
@@ -616,8 +662,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// Sets the timeout function to call _initSlides after each tick.
 		//=====================================================================
 		_setTimer : function(){
+			if(!this.options.hasTimer) return;
 			var _self = this;
-
+			this.stopTimer();
 			this.timer = setTimeout(function(){
 				_self._initSlides();
 				_self._changeSlide();
@@ -630,7 +677,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// Resets the timeout the timer
 		//=====================================================================
 		resetTimer : function(){
-			var _self = this;
 			clearTimeout(this.timer);
 			this._setTimer();
 		},
@@ -641,7 +687,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// Stops the timer
 		//=====================================================================
 		stopTimer : function(){
-			var _self = this;
 			clearTimeout(this.timer);
 		}
 	};
